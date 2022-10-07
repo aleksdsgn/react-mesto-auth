@@ -1,0 +1,27 @@
+.profile__button_type_edit-profile-avatar {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  border-radius: 50%;
+}
+
+.profile__button_type_edit-profile-avatar:hover {
+  opacity: 1;
+}
+
+.profile__button_type_edit-profile-avatar:hover::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0 0 0 /80%);
+  background-image: url('../../../../images/button-edit.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 26px;
+  content: '';
+}

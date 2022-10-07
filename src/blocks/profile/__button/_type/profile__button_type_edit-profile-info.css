@@ -1,0 +1,28 @@
+.profile__button_type_edit-profile-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #fff;
+  margin-top: 16px;
+  background-color: transparent;
+  background-image: url('../../../../images/button-edit.svg');
+  background-size: 10px;
+}
+
+@media screen and (max-width: 720px) {
+  .profile__button_type_edit-profile-info {
+    left: calc(100% + 18px);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .profile__button_type_edit-profile-info {
+    top: -7px;
+    left: calc(100% + 10px);
+    width: 18px;
+    height: 18px;
+    background-size: 7.5px;
+  }
+}
