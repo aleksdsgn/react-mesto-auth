@@ -59,7 +59,7 @@ function AddPlacePopup({
           />
           <span className="popup__error popup__error_visible title-input-error" />
         </label>
-        <label htmlFor="title-input" className="popup__field">
+        <label htmlFor="link-input" className="popup__field">
           <input
             name="link"
             className="popup__input popup__input_type_link"

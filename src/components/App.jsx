@@ -8,6 +8,7 @@ import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import PopupConfirmDelete from './PopupConfirmDelete';
+import Register from './Register';
 
 import { api } from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -170,7 +171,9 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
 
-        <Main
+        <Register />
+
+        {/* <Main
           onEditAvatar={handleEditAvatar}
           onEditProfile={handleEditProfile}
           onAddPlace={handleAddPlace}
@@ -178,7 +181,7 @@ function App() {
           cards={cards}
           onCardLike={handleCardLike}
           onCardDelete={handleCardDelete}
-        />
+        /> */}
 
         <Footer />
 

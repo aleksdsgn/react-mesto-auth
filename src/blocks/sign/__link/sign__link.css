@@ -1,0 +1,12 @@
+.sign__link {
+
+}
+
+.sign__link::before {
+  content: " ";
+}
+
+.sign__link:hover {
+  opacity: .6;
+  transition: .3s;
+}
