@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import '../index.css';
 import Header from './Header';
 import Main from './Main';
@@ -10,6 +11,7 @@ import AddPlacePopup from './AddPlacePopup';
 import PopupConfirmDelete from './PopupConfirmDelete';
 import Register from './Register';
 import Login from './Login';
+import ProtectedRoute from './ProtectedRoute';
 
 import { api } from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -24,6 +26,8 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [buttonText, setButtonText] = useState('');
+
+  const [loggedIn, setLoggenIn] = useState(false);
 
   // Запрос карточек и данных профиля через API
   useEffect(() => {
@@ -172,17 +176,34 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
 
-        <Login />
+        <Switch>
 
-        {/* <Main
-          onEditAvatar={handleEditAvatar}
-          onEditProfile={handleEditProfile}
-          onAddPlace={handleAddPlace}
-          onCardClick={handleCardClick}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-        /> */}
+          <Route path='/sign-in'>
+            <Login />
+          </Route>
+
+          <Route path='/sign-up'>
+            <Register />
+          </Route>
+
+          <ProtectedRoute
+            path='/'
+            loggedIn={loggedIn}
+            component={Main}
+            onEditAvatar={handleEditAvatar}
+            onEditProfile={handleEditProfile}
+            onAddPlace={handleAddPlace}
+            onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
+          />
+
+          <Route>
+            {loggedIn ? <Redirect to='/' /> : <Redirect to='/sign-in' />}
+          </Route>
+
+        </Switch>
 
         <Footer />
 
