@@ -9,6 +9,7 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import PopupConfirmDelete from './PopupConfirmDelete';
 import Register from './Register';
+import Login from './Login';
 
 import { api } from '../utils/api';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
@@ -171,7 +172,7 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <Header />
 
-        <Register />
+        <Login />
 
         {/* <Main
           onEditAvatar={handleEditAvatar}
