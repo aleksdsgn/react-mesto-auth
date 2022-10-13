@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import '../index.css';
 import Header from './Header';
 import Main from './Main';
@@ -11,9 +11,13 @@ import AddPlacePopup from './AddPlacePopup';
 import PopupConfirmDelete from './PopupConfirmDelete';
 import Register from './Register';
 import Login from './Login';
+import InfoTooltip from './InfoTooltip';
+import imageInfoFail from '../images/info-fail.svg';
+import imageInfoSuccess from '../images/info-success.svg';
 import ProtectedRoute from './ProtectedRoute';
 
 import { api } from '../utils/api';
+import * as auth from '../utils/auth';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
 function App() {
@@ -23,11 +27,22 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isCardPopupOpen, setIsCardPopupOpen] = useState(false);
   const [isPopupConfirmDeleteOpen, setIsPopupConfirmDeleteOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setIsInfoTooltipPopupOpen] = useState(false);
+  const [message, setMessage] = useState({
+    image: '',
+    text: '',
+  });
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [buttonText, setButtonText] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [email, setEmail] = useState('');
+  let history = useHistory();
 
-  const [loggedIn, setLoggenIn] = useState(false);
+  // Проверка наличия токена и залогинен ли пользователь
+  useEffect(() => {
+    tokenCheck();
+  }, [loggedIn]);
 
   // Запрос карточек и данных профиля через API
   useEffect(() => {
@@ -50,6 +65,7 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsCardPopupOpen(false);
     setIsPopupConfirmDeleteOpen(false);
+    setIsInfoTooltipPopupOpen(false);
     setSelectedCard({});
   };
 
@@ -170,20 +186,100 @@ function App() {
       });
   };
 
+    // Обработчик попап с сообщением об успехе или ошибке
+    const handleInfoTooltip = () => {
+      setIsInfoTooltipPopupOpen(true);
+    };
+
+  // Обработчик логина
+  const handleLogin = (emailUser, passwordUser) => {
+    if (!emailUser || !passwordUser) {
+      return;
+    }
+    auth.authorize(emailUser, passwordUser)
+    .then((data) => {
+      if (data.token) {
+        localStorage.setItem('jwt', data.token);
+        setLoggedIn(true);
+        history.push('/');
+      }
+    })
+    .catch((err) => {
+      setMessage({
+        image: imageInfoFail,
+        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      });
+      setIsInfoTooltipPopupOpen(true);
+      console.log(err);
+    })
+  }
+
+  // Обработчик выхода
+  const handleLogout = () => {
+    localStorage.removeItem('jwt');
+    setLoggedIn(false);
+    history.push('/sign-in');
+    setEmail('');
+  }
+
+  // Обработчик регистрации
+  const handleRegister = (emailUser, passwordUser) => {
+    auth.register(emailUser, passwordUser)
+    .then(() => {
+      setMessage({
+        image: imageInfoSuccess,
+        text: 'Вы успешно зарегистрировались!',
+      })
+      history.push('/sign-in');
+    })
+    .catch((err) => {
+      setMessage({
+        image: imageInfoFail,
+        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      });
+      console.log(err);
+    })
+    .finally(() => {
+      setIsInfoTooltipPopupOpen(true);
+    })
+  }
+
+  // Проверка токена в локальном хранилище
+  const tokenCheck = () => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      auth.getContent(jwt).then((res) => {
+        if (res) {
+          setEmail(res.data.email);
+          setLoggedIn(true);
+          history.push('/');
+        }
+      })
+      .catch((err) => {
+        setLoggedIn(false);
+        console.log(err)
+      })
+    }
+  }
+
   return (
     <div className="page">
 
       <CurrentUserContext.Provider value={currentUser}>
-        <Header />
+        <Header handleLogout={handleLogout} email={email} />
 
         <Switch>
 
           <Route path='/sign-in'>
-            <Login />
+            <Login handleLogin={handleLogin} />
           </Route>
 
           <Route path='/sign-up'>
-            <Register />
+            <Register
+              handleRegister={handleRegister}
+              message={setMessage}
+              onSuccess={handleInfoTooltip}
+            />
           </Route>
 
           <ProtectedRoute
@@ -237,6 +333,13 @@ function App() {
           onClose={closeAllPopups}
           onConfirm={handleConfirmDeleteSubmit}
           buttonText={buttonText}
+        />
+
+        {/* попап сообщения о успехе или ошибке */}
+        <InfoTooltip
+          isOpen={isInfoTooltipPopupOpen}
+          onClose={closeAllPopups}
+          message={message}
         />
 
         {/* попап открытой карточки */}
