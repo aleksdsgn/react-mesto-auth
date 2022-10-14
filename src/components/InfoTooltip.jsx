@@ -1,7 +1,7 @@
-function InfoTooltip ({
+function InfoTooltip({
   isOpen,
   onClose,
-  message
+  message,
 }) {
   return (
     <section className={`popup ${isOpen ? 'popup_opened' : ''}`}>
@@ -18,11 +18,11 @@ function InfoTooltip ({
           alt={message.text}
         />
         <h3 className="popup__title popup__title-message">
-        {message.text}
+          {message.text}
         </h3>
       </div>
     </section>
-  )
+  );
 }
 
 export default InfoTooltip;

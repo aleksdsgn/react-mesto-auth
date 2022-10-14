@@ -1,5 +1,13 @@
-import { useState, useEffect } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import {
+  useState,
+  useEffect,
+} from 'react';
+import {
+  Switch,
+  Route,
+  Redirect,
+  useHistory,
+} from 'react-router-dom';
 import '../index.css';
 import Header from './Header';
 import Main from './Main';
@@ -37,12 +45,7 @@ function App() {
   const [buttonText, setButtonText] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [email, setEmail] = useState('');
-  let history = useHistory();
-
-  // Проверка наличия токена и залогинен ли пользователь
-  useEffect(() => {
-    tokenCheck();
-  }, [loggedIn]);
+  const history = useHistory();
 
   // Запрос карточек и данных профиля через API
   useEffect(() => {
@@ -186,10 +189,10 @@ function App() {
       });
   };
 
-    // Обработчик попап с сообщением об успехе или ошибке
-    const handleInfoTooltip = () => {
-      setIsInfoTooltipPopupOpen(true);
-    };
+  // Обработчик попап с сообщением об успехе или ошибке
+  const handleInfoTooltip = () => {
+    setIsInfoTooltipPopupOpen(true);
+  };
 
   // Обработчик логина
   const handleLogin = (emailUser, passwordUser) => {
@@ -197,22 +200,22 @@ function App() {
       return;
     }
     auth.authorize(emailUser, passwordUser)
-    .then((data) => {
-      if (data.token) {
-        localStorage.setItem('jwt', data.token);
-        setLoggedIn(true);
-        history.push('/');
-      }
-    })
-    .catch((err) => {
-      setMessage({
-        image: imageInfoFail,
-        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      .then((data) => {
+        if (data.token) {
+          localStorage.setItem('jwt', data.token);
+          setLoggedIn(true);
+          history.push('/');
+        }
+      })
+      .catch((err) => {
+        setMessage({
+          image: imageInfoFail,
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+        });
+        setIsInfoTooltipPopupOpen(true);
+        console.log(err);
       });
-      setIsInfoTooltipPopupOpen(true);
-      console.log(err);
-    })
-  }
+  };
 
   // Обработчик выхода
   const handleLogout = () => {
@@ -220,29 +223,29 @@ function App() {
     setLoggedIn(false);
     history.push('/sign-in');
     setEmail('');
-  }
+  };
 
   // Обработчик регистрации
   const handleRegister = (emailUser, passwordUser) => {
     auth.register(emailUser, passwordUser)
-    .then(() => {
-      setMessage({
-        image: imageInfoSuccess,
-        text: 'Вы успешно зарегистрировались!',
+      .then(() => {
+        setMessage({
+          image: imageInfoSuccess,
+          text: 'Вы успешно зарегистрировались!',
+        });
+        history.push('/sign-in');
       })
-      history.push('/sign-in');
-    })
-    .catch((err) => {
-      setMessage({
-        image: imageInfoFail,
-        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      .catch((err) => {
+        setMessage({
+          image: imageInfoFail,
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+        });
+        console.log(err);
+      })
+      .finally(() => {
+        setIsInfoTooltipPopupOpen(true);
       });
-      console.log(err);
-    })
-    .finally(() => {
-      setIsInfoTooltipPopupOpen(true);
-    })
-  }
+  };
 
   // Проверка токена в локальном хранилище
   const tokenCheck = () => {
@@ -255,12 +258,17 @@ function App() {
           history.push('/');
         }
       })
-      .catch((err) => {
-        setLoggedIn(false);
-        console.log(err)
-      })
+        .catch((err) => {
+          setLoggedIn(false);
+          console.log(err);
+        });
     }
-  }
+  };
+
+  // Проверка наличия токена и залогинен ли пользователь
+  useEffect(() => {
+    tokenCheck();
+  }, [loggedIn]);
 
   return (
     <div className="page">
@@ -270,11 +278,11 @@ function App() {
 
         <Switch>
 
-          <Route path='/sign-in'>
+          <Route path="/sign-in">
             <Login handleLogin={handleLogin} />
           </Route>
 
-          <Route path='/sign-up'>
+          <Route path="/sign-up">
             <Register
               handleRegister={handleRegister}
               message={setMessage}
@@ -283,7 +291,7 @@ function App() {
           </Route>
 
           <ProtectedRoute
-            path='/'
+            path="/"
             loggedIn={loggedIn}
             component={Main}
             onEditAvatar={handleEditAvatar}
@@ -296,7 +304,7 @@ function App() {
           />
 
           <Route>
-            {loggedIn ? <Redirect to='/' /> : <Redirect to='/sign-in' />}
+            {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-in" />}
           </Route>
 
         </Switch>

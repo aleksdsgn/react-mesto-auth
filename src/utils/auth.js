@@ -5,8 +5,9 @@ const handleResponse = (res) => {
     return res.json();
   }
   return Promise.reject(new Error(`Ошибка: ${res.status}`));
-}
+};
 
+/* eslint-disable */
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {
     method: 'POST',
@@ -15,8 +16,8 @@ export const register = (email, password) => {
     },
     body: JSON.stringify({ password, email }),
   })
-  .then(handleResponse);
-}
+    .then(handleResponse);
+};
 
 export const authorize = (email, password) => {
   return fetch(`${BASE_URL}/signin`, {
@@ -24,18 +25,19 @@ export const authorize = (email, password) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ email, password }),
   })
-  .then(handleResponse);
-}
+    .then(handleResponse);
+};
 
 export const getContent = (token) => {
   return fetch(`${BASE_URL}/users/me`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization' : `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
   })
-  .then(handleResponse);
-}
+    .then(handleResponse);
+};
+/* eslint-disable */

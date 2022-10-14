@@ -1,10 +1,10 @@
 .sign__link {
-  text-decoration: none;
   color: #fff;
+  text-decoration: none;
 }
 
 .sign__link::before {
-  content: " ";
+  content: ' ';
 }
 
 .sign__link:hover {

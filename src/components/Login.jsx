@@ -2,12 +2,12 @@ import { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 
 class Login extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       email: '',
       password: '',
-    }
+    };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -15,19 +15,18 @@ class Login extends Component {
   handleChange(e) {
     const { name, value } = e.target;
     this.setState({
-      [name]: value
+      [name]: value,
     });
   }
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.handleLogin(
-      this.state.email,
-      this.state.password
-    );
+    const { handleLogin } = this.props;
+    const { email, password } = this.state;
+    handleLogin(email, password);
   }
 
-  render(){
+  render() {
     return (
       <section className="sign">
         <form
@@ -46,7 +45,7 @@ class Login extends Component {
               placeholder="Email"
               required=""
               id="email-input"
-              value={this.state.email}
+              value={this.email}
               onChange={this.handleChange}
             />
           </label>
@@ -58,7 +57,7 @@ class Login extends Component {
               placeholder="Пароль"
               required=""
               id="password-input"
-              value={this.state.password}
+              value={this.password}
               onChange={this.handleChange}
             />
           </label>
